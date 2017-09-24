@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- 配置bean -->
+	<bean id="helloWord" class="com.hy.ly.beans.HelloWord">
+		<property name="name" value="spring"></property>
+	</bean>
+
+	<!-- 通过构造方法来配置Bean的属性,可以指定参数的位置和类型，来区分重载的构造器 -->
+	<bean id="car" class="com.hy.ly.beans.Car">
+		<constructor-arg value="Audi" index="0"></constructor-arg>
+		<constructor-arg value="BeiJing" index="1"></constructor-arg>
+		<constructor-arg value="300000" index="2"></constructor-arg>
+	</bean>
+
+	<bean id="car2" class="com.hy.ly.beans.Car">
+		<constructor-arg value="BMW" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="ShangHai" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="300" type="int"></constructor-arg>
+	</bean>
+
+	<bean id="car3" class="com.hy.ly.beans.Car">
+		<constructor-arg value="BMW" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="ShangHai" type="java.lang.String"></constructor-arg>
+		<constructor-arg type="int">
+			<value>280</value>
+		</constructor-arg>
+	</bean>
+	<!-- 如果包含特殊字符，使用用![CDATA[]]包括起来，属性值可以value子节点注入 -->
+	<bean id="car4" class="com.hy.ly.beans.Car">
+		<constructor-arg value="BMW" type="java.lang.String"></constructor-arg>
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[<ShangHai^_^>]]></value>
+		</constructor-arg>
+		<constructor-arg type="int">
+			<value>280</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="person" class="com.hy.ly.beans.Person">
+		<property name="name" value="Lilei"></property>
+		<property name="age" value="30"></property>
+		<!-- <property name="car" ref="car"></property> -->
+		<!-- <property name="car"> <ref bean="car2"/> </property> -->
+		<!-- 内部bean -->
+		<property name="car">
+			<bean class="com.hy.ly.beans.Car">
+				<constructor-arg value="BaoShiJie" index="0"></constructor-arg>
+				<constructor-arg value="Deguo" index="1"></constructor-arg>
+				<constructor-arg value="600" index="2"></constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 给引用属性赋值null,<null/> -->
+	<bean id="person1" class="com.hy.ly.beans.Person">
+		<property name="name" value="Lilei"></property>
+		<property name="age" value="30"></property>
+		<property name="car">
+			<null />
+		</property>
+	</bean>
+	<!-- 给级联属性赋值,属性需要先初始化才能给级联属性赋值，否则会报异常 -->
+	<bean id="person2" class="com.hy.ly.beans.Person">
+		<property name="name" value="Lilei"></property>
+		<property name="age" value="30"></property>
+		<property name="car" ref="car"></property>
+		<property name="car.maxSpeed" value="290"></property>
+	</bean>
+
+	<!-- 测试集合属性 -->
+	<bean id="person3" class="com.hy.ly.collections.Person">
+		<property name="name" value="Lilei"></property>
+		<property name="age" value="30"></property>
+		<property name="cars">
+			<list>
+				<ref bean="car" />
+				<ref bean="car2" />
+				<ref bean="car3" />
+			</list>
+		</property>
+	</bean>
+	<!-- Map配置 -->
+	<bean id="teacher" class="com.hy.ly.collections.Teacher">
+		<property name="name" value="Yuminhong"></property>
+		<property name="age" value="40"></property>
+		<property name="cars">
+			<map>
+				<entry key="1001" value-ref="car"></entry>
+				<entry key="1002" value-ref="car2"></entry>
+				<entry key="1003" value-ref="car3"></entry>
+			</map>
+		</property>
+	</bean>
+	<!-- Properties -->
+	<bean id="dataSource" class="com.hy.ly.collections.DataSource">
+		<property name="properties">
+			<props>
+				<prop key="user">root</prop>
+				<prop key="password">123456</prop>
+				<prop key="url">jdbc:mysql:///test</prop>
+				<prop key="driver">com.mysql.jdbc.Driver</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 配置单例的集合Bean给多外bean来引用,需要导入util命名空间 -->
+	<util:list id="cars">
+		<ref bean="car"/>
+		<ref bean="car2"/>
+		<ref bean="car3"/>
+		<ref bean="car4"/>
+	</util:list>
+	
+	<bean id="person4" class="com.hy.ly.collections.Person">
+		<property name="name" value="Lilei"></property>
+		<property name="age" value="30"></property>
+		<property name="cars" ref="cars"></property>
+	</bean>
+	
+	<!-- 通过P命名空间，为bean属性赋值,需要先导入命名空间 -->
+	<bean id="person5" class="com.hy.ly.collections.Person" p:name="张三" p:age="30" p:cars-ref="cars"></bean>
+</beans>
