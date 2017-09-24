@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 抽象bean用abstract="true"来修饰，不能来实例化，用当模板使用的 -->
+	<bean id="address" class="com.hy.ly.autowire.Address" p:city="Zhengzhou^_^"
+		p:street="ZhongYuan"></bean>
+	<bean id="address2" class="com.hy.ly.autowire.Address" p:city="Zhengzhou"
+		p:street="JinShui"></bean>
+	<!-- 使用bean的parent属性来指定继承哪个bean的配置 -->
+	<bean id="address3" p:street="高新区" parent="address"></bean>
+
+	<bean id="car" class="com.hy.ly.autowire.Car" p:brand="BMW"
+		p:price="1000000"></bean>
+	<!-- student依赖car,设置如下： depends-on="car" -->	
+	<bean id="student" class="com.hy.ly.autowire.Student" p:name="Tom"
+		p:address-ref="address" depends-on="car"></bean>
+</beans>
