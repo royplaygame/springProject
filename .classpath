@@ -13,6 +13,7 @@
 	<classpathentry kind="lib" path="lib/spring-expression-4.3.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/c3p0-0.9.5.2.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="lib/spring-aop-4.3.3.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
