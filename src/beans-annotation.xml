@@ -17,11 +17,13 @@
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
 	</context:component-scan> -->
 	
-	
+	<!--
 	<context:component-scan base-package="com.hy.ly.annotation" use-default-filters="false">
-		<!-- <context:exclude-filter type="assignable" expression="com.hy.ly.annotation.repository.UserDaoImpl"/> -->
-		<context:include-filter type="assignable" expression="com.hy.ly.annotation.repository.UserDaoImpl"/>
+		<context:exclude-filter type="assignable" expression="com.hy.ly.annotation.repository.UserDaoImpl"/> 
+		 <context:include-filter type="assignable" expression="com.hy.ly.annotation.repository.UserDaoImpl"/>
 	</context:component-scan> 
+	-->
 	
+	<context:component-scan base-package="com.hy.ly.annotation"></context:component-scan>
 	
 </beans>

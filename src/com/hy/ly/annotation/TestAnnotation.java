@@ -1,5 +1,6 @@
 package com.hy.ly.annotation;
 
+import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -29,6 +30,14 @@ public class TestAnnotation {
 		UserDaoImpl userDaoImpl=(UserDaoImpl) ctx.getBean("userDaoImpl");
 		System.out.println(userDaoImpl);
 		
+		ctx.close();
+	}
+	
+	@Test
+	public void testRelation(){
+		AbstractApplicationContext ctx=new ClassPathXmlApplicationContext("beans-annotation.xml");
+		UserController userController=(UserController) ctx.getBean("userController");
+		userController.execute();
 		ctx.close();
 	}
 }
