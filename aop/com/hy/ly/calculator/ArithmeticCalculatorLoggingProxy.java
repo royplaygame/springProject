@@ -25,8 +25,7 @@ public class ArithmeticCalculatorLoggingProxy {
 		// 调用代理对象其中的方法时，执行该方法中的代码
 		InvocationHandler h = new InvocationHandler() {
 			/**
-			 * proxy:正在返回的那个代理对象，一般情况下不使用，在invoke中都不使用该方法。 
-			 * method:正在被调用的方法
+			 * proxy:正在返回的那个代理对象，一般情况下不使用，在invoke中都不使用该方法。 method:正在被调用的方法
 			 * args:调用的方法时，传入的参数
 			 */
 			@Override
@@ -35,7 +34,17 @@ public class ArithmeticCalculatorLoggingProxy {
 				// 打印开始日志
 				System.out.println("the method " + methodName + " begins with " + Arrays.asList(args));
 				// 执行方法
-				Object result = method.invoke(target, args);
+				Object result = null;
+				try {
+					// 前置通知
+					result = method.invoke(target, args);
+					// 返回通知,可以访问到方法的返回值。
+				} catch (Exception e) {
+					e.printStackTrace();
+					// 异常通知，可以访问到方法出现的异常。
+				}
+				// 后置通知：因为方法可能会出现异常，所以访问不到方法的返回值。
+
 				// 打印结束日志
 				System.out.println("the method " + methodName + " begins with " + result);
 				return result;
