@@ -3,7 +3,9 @@ package com.hy.ly.jdbc;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -13,6 +15,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import com.hy.ly.po.AdminUser;
 
@@ -20,10 +25,41 @@ public class JDBCTest {
 
 	private ApplicationContext ctx = null;
 	private JdbcTemplate jdbcTemplate = null;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	{
 		ctx = new ClassPathXmlApplicationContext("applicationContext-jdbc.xml");
 		jdbcTemplate = (JdbcTemplate) ctx.getBean("jdbcTemplate");
+		namedParameterJdbcTemplate = (NamedParameterJdbcTemplate) ctx.getBean("namedParameterJdbcTemplate");
+	}
+
+	/**
+	 * 1. 有多个参数，可以给参数启名称，看起来比较容易对照，便于维护。 2. 缺点较为麻烦。需要额外定义一个Map
+	 */
+	@Test
+	public void testNamedParameterJdbcTemplate() {
+		String sql = "insert into adminac values(seq_admin.nextval,:name,:pwd)";
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("name", "bailongm");
+		paramMap.put("pwd", "666666");
+
+		int row = namedParameterJdbcTemplate.update(sql, paramMap);
+		System.out.println(row);
+	}
+
+	/**
+	 * 这种方式就比较好,使用具名参数时，可以使用update(sql, paramSource)方法来操作。
+	 * SQL语句中的参数名称，和类的属性名称一致。 SqlParameterSource paramSource做为参数。
+	 */
+	@Test
+	public void testNamedParameterJdbcTemplate2() {
+		String sql = "insert into adminac values(seq_admin.nextval,:adminName,:adminPwd)";
+
+		AdminUser admin = new AdminUser(1000, "zhubajie", "555555");
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(admin);
+		int row = namedParameterJdbcTemplate.update(sql, paramSource);
+		System.out.println(row);
 	}
 
 	@Test
@@ -73,7 +109,8 @@ public class JDBCTest {
 	}
 
 	// 从数据库得到一条记录，实际是一个对象,可以使用指定列的别名和属性名的映射关系。
-	// queryForObject(String sql, RowMapper<AdminUser> rowMapper, Object... args)
+	// queryForObject(String sql, RowMapper<AdminUser> rowMapper, Object...
+	// args)
 	@Test
 	public void testQueryForObject() {
 		String sql = "select adminnumber adminno,adminname,adminpwd from adminac where adminnumber=?";
@@ -102,7 +139,7 @@ public class JDBCTest {
 	}
 
 	// 获取单个列的值，或者做统计查询
-	//queryForObject(String sql, Class<String> requiredType, Object... args)
+	// queryForObject(String sql, Class<String> requiredType, Object... args)
 	@Test
 	public void testQueryForOneObject2() {
 		String sql = "select adminname from adminac where adminnumber=?";
