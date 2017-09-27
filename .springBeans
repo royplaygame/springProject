@@ -19,6 +19,7 @@
 		<config>src/beans-annotation.xml</config>
 		<config>src/beans-generic.xml</config>
 		<config>aop/applicationContext-aop.xml</config>
+		<config>jdbc/applicationContext-jdbc.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
